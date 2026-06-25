@@ -9,7 +9,11 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [usuario] = useState<Usuario | null>(null);
+  //No hay usuario
+  // const [usuario] = useState<Usuario | null>(null);
+
+  //Simular que si hay usuario
+  const [usuario] = useState<Usuario | null>({ id: 1, nickName: "test" });
 
   return (
     <AuthContext.Provider value={{ usuario }}>{children}</AuthContext.Provider>

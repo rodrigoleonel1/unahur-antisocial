@@ -10,28 +10,32 @@ import InicioSesion from "./pages/InicioSesion";
 import RutaProtegida from "./components/RutaProtegida";
 import AuthProvider from "./context/AuthContext";
 import Header from "./components/Header";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="theme">
       <AuthProvider>
         <BrowserRouter>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Inicio />} />
-            <Route path="/iniciar" element={<InicioSesion />} />
-            <Route path="/registrar" element={<RegistroUsuario />} />
-            <Route path="/publicacion/:id" element={<DetallePost />} />
+          <main className="md:ml-20 mb-4 min-h-screen">
+            <Header />
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Inicio />} />
+              <Route path="/iniciar" element={<InicioSesion />} />
+              <Route path="/registrar" element={<RegistroUsuario />} />
+              <Route path="/publicacion/:id" element={<DetallePost />} />
 
-            {/* Estas 2 tienen que ser protegidas */}
-            <Route element={<RutaProtegida />}>
-              <Route path="/perfil" element={<Perfil />} />
-              <Route path="/crear" element={<CrearPost />} />
-            </Route>
+              {/* Estas 2 tienen que ser protegidas */}
+              <Route element={<RutaProtegida />}>
+                <Route path="/perfil" element={<Perfil />} />
+                <Route path="/publicar" element={<CrearPost />} />
+              </Route>
 
-            {/* Pagina error */}
-            <Route path="*" element={<NoEncontrado />} />
-          </Routes>
+              {/* Pagina error */}
+              <Route path="*" element={<NoEncontrado />} />
+            </Routes>
+          </main>
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
