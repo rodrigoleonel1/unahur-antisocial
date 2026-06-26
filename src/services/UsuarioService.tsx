@@ -17,7 +17,7 @@ export async function obtenerUsuarios(): Promise<Usuario[]> {
 }
 
 export async function obtenerUsuarioPorNickName(nickName: string): Promise<Usuario> {
-  const respuesta = await fetch(`${API_URL}/nickname/${nickName}`);
+  const respuesta = await fetch(`${API_URL}/${nickName}`);
 
   if (!respuesta.ok) {
     throw new Error("No se pudo obtener el usuario");
