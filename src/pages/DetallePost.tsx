@@ -73,9 +73,17 @@ export default function DetallePost() {
           </h2>
         </div>
 
-        {/* Formulario o aviso de login */}
+        {/* Crear comentario */}
         {usuario ? (
-          <ComentarioForm />
+          <ComentarioForm
+            postId={post._id}
+            onNuevoComentario={(nuevoComentario) => {
+              setComentarios((comentariosAnteriores) => [
+                nuevoComentario,
+                ...comentariosAnteriores,
+              ]);
+            }}
+          />
         ) : (
           <div className="rounded-lg border border-dashed border-zinc-200 dark:border-gray-800/60 p-4 text-center text-sm text-zinc-400 dark:text-gray-600 bg-zinc-300/20 dark:bg-gray-900/20">
             <Link to="/iniciar" className="text-blue-500 hover:underline">
@@ -93,7 +101,9 @@ export default function DetallePost() {
         ) : (
           <ul className="space-y-2">
             {comentarios.map((comentario) => (
-              <DetalleComentario key={comentario._id} comentario={comentario} />
+              <div key={comentario._id} className="animacion-comentario">
+                <DetalleComentario comentario={comentario} />
+              </div>
             ))}
           </ul>
         )}

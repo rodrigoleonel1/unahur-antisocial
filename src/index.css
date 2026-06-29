@@ -18,7 +18,7 @@ h1,
 h2,
 h3,
 h4,
-.display {
+.font-display {
   font-family: "Space Grotesk", sans-serif;
 }
 
@@ -48,3 +48,33 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@keyframes animacionComentario {
+  from {
+    opacity: 0;
+    transform: translateX(-2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animacion-comentario {
+  animation: animacionComentario 0.5s ease forwards;
+}
+
+@keyframes animacionAlerta {
+  from {
+    opacity: 0;
+    transform: translateX(0%) translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0%) translateY(0);
+  }
+}
+
+.animacion-alerta {
+  animation: animacionAlerta 0.3s ease forwards;
+}

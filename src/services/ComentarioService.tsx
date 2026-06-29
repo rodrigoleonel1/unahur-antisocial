@@ -36,3 +36,21 @@ export async function obtenerComentariosPorPost(
 
   return await respuesta.json();
 }
+
+export async function crearComentario(data: {
+  text: string;
+  user: string;
+  post: string;
+}): Promise<Comentario> {
+  const respuesta = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!respuesta.ok) {
+    throw new Error("No se pudo crear el comentario");
+  }
+
+  return await respuesta.json();
+}
