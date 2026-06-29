@@ -3,17 +3,33 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function InicioSesion() {
-  
+
   const navigate = useNavigate();
   const { iniciar, isAuthenticated } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); //errores globales
+
+
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+
+
     event.preventDefault();
+
+    const emailVacio = email.trim() === "";
+    const passwordVacia = password.trim() === "";
+
+    setEmailError(emailVacio);
+    setPasswordError(passwordVacia);
+
+    if (emailVacio || passwordVacia) {
+      return;
+    }
 
     const loginOk = iniciar({
       email,
@@ -31,10 +47,10 @@ export default function InicioSesion() {
   if (isAuthenticated) {
     return <Navigate to="/mi-perfil" replace />;
   }
-  
-  
+
+
   return <>
-      <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md">
 
         <div className="mb-8 text-center">
@@ -51,10 +67,14 @@ export default function InicioSesion() {
             <input
               id="email"
               type="email"
-              placeholder="correo@ejemplo.com"
-              className="w-full border rounded-md p-2"
-               value={email}
-               onChange={(event) => setEmail(event.target.value)}
+              placeholder={emailError ? "Debe ingresar un email valido" : "ejemplo@gmail.com"}
+              className={`w-full rounded-md p-2 border transition
+              ${emailError ? "border-red-500 placeholder-red-500" : "border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"}`}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError(false);
+              }}
             />
           </div>
           <div>
@@ -64,17 +84,21 @@ export default function InicioSesion() {
             <input
               id="password"
               type="password"
-              placeholder="********"
-              className="w-full border rounded-md p-2"
-               value={password}
-               onChange={(event) => setPassword(event.target.value)}
+              placeholder={passwordError ? "Debe ingresar una contraseña" : "********"}
+              className={`w-full rounded-md p-2 border transition
+              ${passwordError ? "border-red-500 placeholder-red-500" : "border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"}`}
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                setPasswordError(false);
+              }}
             />
           </div>
           <button
             type="submit"
             className="w-full border rounded-md py-2"
           >
-            Ingresar
+            Iniciar sesion
           </button>
 
         </form>
@@ -83,7 +107,20 @@ export default function InicioSesion() {
             ¿No tienes una cuenta?
           </p>
 
-          <button className="mt-2 underline">
+          <button
+            type="submit"
+            className="
+            w-full
+            py-3
+            rounded-md
+            bg-blue-600
+            text-white
+            font-semibold
+            transition
+            hover:bg-blue-700
+            active:bg-blue-800
+            active:scale-95"
+          >
             Registrarse
           </button>
         </div>
@@ -91,5 +128,5 @@ export default function InicioSesion() {
       </div>
     </div>
   </>;
-  }
+}
 
