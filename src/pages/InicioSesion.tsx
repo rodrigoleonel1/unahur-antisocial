@@ -5,16 +5,19 @@ import {useAuth} from "../context/AuthContext"
 export default function InicioSesion() {
 
   const navigate = useNavigate();
-  const {iniciar} = useAuth();
+  const { iniciar, user } = useAuth();
 
   const [nickName, setnickName] = useState("");
   const [password, setPassword] = useState("");
 
-  const [error, setError] = useState(""); //errores globales
+  const [error, setError] = useState("");
 
-
-  const [ nickNameError, setnickNameError] = useState(false);
+  const [nickNameError, setnickNameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+
+  if (user) {
+    return <Navigate to={`/perfil/${user.nickName}`} replace />;
+  }
 
 async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 
