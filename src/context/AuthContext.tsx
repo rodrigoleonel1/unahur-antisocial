@@ -28,6 +28,8 @@ async function iniciar(data: LoginData): Promise<boolean> {
   } catch {
     return false;
   }
+
+  
 }
 
   function salir() {

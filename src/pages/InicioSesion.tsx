@@ -36,8 +36,6 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     password,
   });
 
-  console.log(loginOk);
-
   if (loginOk) {
     setError("");
     navigate("/");
