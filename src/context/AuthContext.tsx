@@ -1,32 +1,31 @@
 import { createContext, useContext, useState } from "react";
-import type { AuthContextType, LoginData, User } from "../types/loginDatos";
+import type { AuthContextType, LoginData, Usuario } from "../types/Usuario";
+import {obtenerUsuarioPorNickName} from "../services/UsuarioService"
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const permitido = {
-  id: 1,
-  name: "Harry",
-  email: "harryKane@gmail.com",
-  password: "1234",
-};
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Usuario | null>(null);
 
-  function iniciar(data: LoginData): boolean {
-    if (data.email === permitido.email && data.password === permitido.password) {
-      const loggedUser: User = {
-        id: permitido.id,
-        name: permitido.name,
-        email: permitido.email,
-      };
+async function iniciar(data: LoginData): Promise<boolean> {
+  try {
+    const usuario = await obtenerUsuarioPorNickName(data.nickName);
 
-      setUser(loggedUser);
+    if (
+      data.nickName === usuario.nickName &&
+      data.password === usuario._id
+    ) {
+      setUser(usuario);
       return true;
     }
 
     return false;
+  } catch {
+    return false;
   }
+}
 
   function salir() {
     setUser(null);

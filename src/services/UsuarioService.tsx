@@ -16,7 +16,7 @@ export async function obtenerUsuarios(): Promise<Usuario[]> {
   return productos;
 }
 
-export async function obtenerUsuarioPorNickName(nickName: string): Promise<Usuario> {
+export async  function obtenerUsuarioPorNickName(nickName: string): Promise<Usuario> {
   const respuesta = await fetch(`${API_URL}/${nickName}`);
 
   if (!respuesta.ok) {

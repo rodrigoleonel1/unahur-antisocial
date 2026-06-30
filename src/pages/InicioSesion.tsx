@@ -7,46 +7,40 @@ export default function InicioSesion() {
   const navigate = useNavigate();
   const { iniciar, isAuthenticated } = useAuth();
 
-  const [email, setEmail] = useState("");
+  const [nickName, setnickName] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState(""); //errores globales
 
 
-  const [emailError, setEmailError] = useState(false);
+  const [ nickNameError, setnickNameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault();
 
+  const nickVacio = nickName.trim() === "";
+  const passwordVacia = password.trim() === "";
 
-    event.preventDefault();
+  setnickNameError(nickVacio);
+  setPasswordError(passwordVacia);
 
-    const emailVacio = email.trim() === "";
-    const passwordVacia = password.trim() === "";
-
-    setEmailError(emailVacio);
-    setPasswordError(passwordVacia);
-
-    if (emailVacio || passwordVacia) {
-      return;
-    }
-
-    const loginOk = iniciar({
-      email,
-      password,
-    });
-
-    if (loginOk) {
-      setError("");
-      navigate("/inicio");
-    } else {
-      setError("Email o contraseña invalidos");
-    }
+  if (nickVacio || passwordVacia) {
+    return;
   }
 
-  if (isAuthenticated) {
-    return <Navigate to="/mi-perfil" replace />;
+  const loginOk = await iniciar({
+    nickName,
+    password,
+  });
+
+  if (loginOk) {
+    setError("");
+    navigate("/inicio");
+  } else {
+    setError("Email o contraseña inválidos");
   }
+}
 
 
   return <>
@@ -62,20 +56,20 @@ export default function InicioSesion() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block mb-2">
-              Email
+              Email o nickName
             </label>
             <input
-              id="email"
-              type="email"
-              placeholder={emailError ? "Debe ingresar un email valido" : "ejemplo@gmail.com"}
+              id="emailOrNick"
+              type="name"
+              placeholder={nickNameError ? "Debe ingresar un email o usuario valido" : "nombre de usuario"}
               className={`w-full rounded-md p-2 border transition border-2
-              ${emailError ?
+              ${nickNameError ?
                   "border-red-300 focus:ring-1 focus:ring-red-300 outline-none" :
                   "border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"}`}
-              value={email}
+              value={nickName}
               onChange={(e) => {
-                setEmail(e.target.value);
-                setEmailError(false);
+                setnickName(e.target.value);
+                setnickNameError(false);
               }}
             />
           </div>
