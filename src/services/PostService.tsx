@@ -30,3 +30,31 @@ export async function obtenerPostsDeUsuario(nickName: string): Promise<Post[]> {
 
   return posts.filter(post => post.user.nickName === nickName);
 }
+
+export async function crearPost(postData: { description: string; id: string }): Promise<Post> {
+  const respuesta = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(postData),
+  });
+
+  if (!respuesta.ok) {
+    throw new Error("No se pudo crear la publicación");
+  }
+
+  return await respuesta.json();
+}
+
+export async function asociarImagenAPost(id: string, urls: string[]): Promise<Post> {
+  const respuesta = await fetch(`${API_URL}/${id}/imagenes`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ urls }), 
+  });
+
+  if (!respuesta.ok) {
+    throw new Error("No se pudieron asociar las imágenes al posteo.");
+  }
+
+  return await respuesta.json();
+}
