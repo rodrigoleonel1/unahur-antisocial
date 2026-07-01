@@ -1,4 +1,11 @@
-import {House, CirclePlus, UserRound, LogIn, UserRoundPlus, LogOut  } from "lucide-react";
+import {
+  House,
+  CirclePlus,
+  UserRound,
+  LogIn,
+  UserRoundPlus,
+  LogOut,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { ThemeBoton } from "./ThemeBoton";
 import { useAuth } from "../context/AuthContext";
@@ -10,16 +17,24 @@ export const estiloLink = (isActive: boolean) =>
       : "text-zinc-600 dark:text-gray-500 hover:bg-zinc-200 dark:hover:bg-gray-900 hover:text-gray-900 dark:hover:text-white"
   }`;
 
-export default function Navbar() {
-const { isAuthenticated, user, salir } = useAuth();
+type NavLinkItem = {
+  link: string;
+  icon: typeof House;
+  publico?: boolean;
+  protegido?: boolean;
+  invitado?: boolean;
+};
 
-const links = [
-  { link: "/", icon: House, publico: true },
-  { link: "/publicar", icon: CirclePlus, protegido: true },
-  { link: `/perfil/${user?.nickName}`, icon: UserRound, protegido: true },
-  { link: "/iniciar", icon: LogIn, invitado: true },
-  { link: "/registrar", icon: UserRoundPlus, invitado: true },
-];
+export default function Navbar() {
+  const { isAuthenticated, user, salir } = useAuth();
+
+  const links: NavLinkItem[] = [
+    { link: "/", icon: House, publico: true },
+    { link: "/publicar", icon: CirclePlus, protegido: true },
+    { link: `/perfil/${user?.nickName}`, icon: UserRound, protegido: true },
+    { link: "/iniciar", icon: LogIn, invitado: true },
+    { link: "/registrar", icon: UserRoundPlus, invitado: true },
+  ];
 
   const linksVisibles = links.filter((l) => {
     if (l.publico) return true;
@@ -31,9 +46,8 @@ const links = [
   return (
     <>
       {/* Vista pc */}
-      <nav className="hidden md:flex flex-col items-center justify-between fixed left-0 top-0 h-screen w-20 py-6 border-r border-zinc-300 dark:border-gray-800 z-50 bg-zinc-100/70 dark:bg-gray-950/50 backdrop-blur-md">
+      <nav className="hidden md:flex flex-col items-center justify-between fixed left-0 top-0 h-screen w-20 py-6 border-r border-zinc-300 dark:border-gray-800 z-50 bg-zinc-100/70 dark:bg-gray-950/50 backdrop-blur-md ">
         <ul className="flex flex-col items-center gap-1">
-          
           {linksVisibles.map(({ link, icon: Icon }) => (
             <li key={link}>
               <NavLink
@@ -45,13 +59,14 @@ const links = [
               </NavLink>
             </li>
           ))}
-            
+
           {isAuthenticated && (
-            <li>
-              <button onClick={salir} className={estiloLink(false)} >
-                <LogOut className="text-red-800" size={24} strokeWidth={2} />
-              </button>
-            </li>
+            <button
+              onClick={salir}
+              className={`${estiloLink(false)} cursor-pointer`}
+            >
+              <LogOut className="text-red-800" size={24} strokeWidth={2} />
+            </button>
           )}
         </ul>
         <ThemeBoton />
@@ -70,11 +85,14 @@ const links = [
           </NavLink>
         ))}
 
-                  {isAuthenticated && (
-              <button onClick={salir} className={estiloLink(false)} >
-                <LogOut size={24} strokeWidth={2} />
-              </button>
-          )}
+        {isAuthenticated && (
+          <button
+            onClick={salir}
+            className={`${estiloLink(false)} cursor-pointer`}
+          >
+            <LogOut size={24} strokeWidth={2} />
+          </button>
+        )}
         <ThemeBoton mobile />
       </nav>
     </>

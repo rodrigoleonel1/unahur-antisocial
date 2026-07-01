@@ -30,7 +30,6 @@ async function iniciar(data: LoginData): Promise<boolean> {
       setUser(usuario);
       localStorage.setItem("usuario", JSON.stringify(usuario));
       return true;
-      console.log(usuario)
     }
 
     return false;

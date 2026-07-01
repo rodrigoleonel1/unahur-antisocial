@@ -7,7 +7,7 @@ import { obtenerPostPorId } from "../services/PostService";
 import type { Post } from "../types/Post";
 import type { Comentario } from "../types/Comentario";
 import Loader from "../components/Loader";
-import Error from "../components/Error";
+import ComponenteError from "../components/ComponenteError";
 import ComentarioForm from "../components/ComentarioForm";
 import DetalleComentario from "../components/DetalleComentario";
 import PostCard from "../components/PostCard";
@@ -20,6 +20,7 @@ export default function DetallePost() {
   const [comentarios, setComentarios] = useState<Comentario[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [noEncontrado, setNoEncontrado] = useState<boolean>(false);
 
   useEffect(() => {
     async function obtenerData() {
@@ -34,10 +35,14 @@ export default function DetallePost() {
         setPost(dataPost);
         const comentariosPost = await obtenerComentariosPorPost(id);
         setComentarios(comentariosPost);
-      } catch {
-        setError(
-          "No se pudo cargar la publicacion, hubo un problema con la base de datos",
-        );
+      } catch (err) {
+        if (err instanceof Error && err.message === "NO-EXISTE") {
+          setNoEncontrado(true);
+        } else {
+          setError(
+            "No se pudo cargar la publicacion, hubo un problema con la base de datos",
+          );
+        }
       } finally {
         setLoading(false);
       }
@@ -47,7 +52,9 @@ export default function DetallePost() {
 
   if (loading) return <Loader />;
 
-  if (error) return <Error mensaje={error} />;
+  if (error) return <ComponenteError mensaje={error} />;
+
+  if (noEncontrado) return <Navigate to="/404" replace />;
 
   if (!post) return <Navigate to="/404" replace />;
 
@@ -62,7 +69,12 @@ export default function DetallePost() {
       </Link>
 
       {/* Post */}
-      <PostCard key={post._id} post={post} conComentarios={false} />
+      <PostCard
+        key={post._id}
+        post={post}
+        cantidadComentarios={comentarios.length}
+        conComentarios={false}
+      />
 
       {/* Comentarios */}
       <section className="space-y-4">
@@ -95,8 +107,8 @@ export default function DetallePost() {
 
         {/* Lista de comentarios */}
         {comentarios.length === 0 ? (
-          <p className="text-sm text-zinc-600 dark:text-gray-500">
-            Nadie comentó todavía. Sé el primero.
+          <p className=" text-zinc-600 dark:text-gray-500">
+            Todavia no hay comentarios, podes ser el primero.
           </p>
         ) : (
           <ul className="space-y-2">

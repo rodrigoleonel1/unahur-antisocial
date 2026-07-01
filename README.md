@@ -1,75 +1,65 @@
-# React + TypeScript + Vite
+# Antisocial-UNAHUR
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto es una red social desarrollada con React-TypeScript, que permite a los usuarios registrarse, iniciar sesión, crear publicaciones con imágenes y etiquetas, comentar posteos y visitar perfiles de otros usuarios, asi como seguirlos y dejarlos de seguir.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Registro e inicio de sesión de usuarios
+- Creación de publicaciones
+- Creación de nuevas etiquetas
+- Sistema de comentarios en las publicaciones
+- Perfiles de usuario
+- Rutas protegidas (crear publicación y ver perfil requieren estar autenticado)
+- Tema claro/oscuro
 
-## React Compiler
+## Tecnologías utilizadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- TypeScript
+- React Router DOM
+- Tailwind CSS
+- Lucide React (iconos)
 
-## Expanding the ESLint configuration
+## Instrucciones para correr el repositorio
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Requisitos previos
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js
+- El backend de Antisocial corriendo localmente (Se puede clonar desde: https://github.com/EP-UnaHur-2026C1/copia-anti-social-documental-tp-persistenten-ts)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Pasos
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Cloná el repositorio o descomprimí el proyecto:
 
+```bash
+   git clone "https://github.com/rodrigoleonel1/unahur-antisocial"
+   cd antisocial
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Instalá las dependencias:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+   npm install
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+3. Verificá el archivo `.env` debe contener la URL base del backend:
 
 ```
+   VITE_API_URL=http://localhost:3000
+```
+
+4. Iniciá el servidor:
+
+```bash
+   npm run dev
+```
+
+5. Abrí http://localhost:5173 en el navegador.
+
+## URL de la API utilizada
+
+El el proyecto consume una API propia, disponible para clonar desde:
+
+https://github.com/EP-UnaHur-2026C1/copia-anti-social-documental-tp-persistenten-ts
+
+Este backend debe estar corriendo localmente para que la aplicación funcione correctamente. 

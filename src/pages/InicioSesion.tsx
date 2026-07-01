@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import {useAuth} from "../context/AuthContext"
+import { useAuth } from "../context/AuthContext";
 
 export default function InicioSesion() {
-
   const navigate = useNavigate();
   const { iniciar, user } = useAuth();
 
@@ -19,89 +18,99 @@ export default function InicioSesion() {
     return <Navigate to={`/perfil/${user.nickName}`} replace />;
   }
 
-async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-  
-  event.preventDefault();
+    const nickVacio = nickName.trim() === "";
+    const passwordVacia = password.trim() === "";
 
-  const nickVacio = nickName.trim() === "";
-  const passwordVacia = password.trim() === "";
+    setnickNameError(nickVacio);
+    setPasswordError(passwordVacia);
 
-  setnickNameError(nickVacio);
-  setPasswordError(passwordVacia);
+    if (nickVacio || passwordVacia) {
+      return;
+    }
 
-  if (nickVacio || passwordVacia) {
-    return;
+    const loginOk = await iniciar({
+      nickName,
+      password,
+    });
+
+    if (loginOk) {
+      setError("");
+      navigate("/");
+    } else {
+      setError("Nickname o contraseña inválidos");
+    }
   }
 
-  const loginOk = await iniciar({
-    nickName,
-    password,
-  });
-
-  if (loginOk) {
-    setError("");
-    navigate("/");
-
-  } else {
-    setError("Email o contraseña inválidos");
-  }
-
-}
-
-
-  return <>
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold">Iniciar sesión</h1>
-          <p className="mt-2">
-            Ingresa tus credenciales para continuar.
-          </p>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="emailORnickName" className="block mb-2">
-              Email o nickName
-            </label>
-            <input
-              id="emailOrNick"
-              type="name"
-              placeholder={nickNameError ? "Debe ingresar un email o usuario valido" : "nombre de usuario"}
-              className={`w-full rounded-md p-2 border transition border-2
-              ${nickNameError ?
-                  "border-red-300 focus:ring-1 focus:ring-red-300 outline-none" :
-                  "border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"}`}
-              value={nickName}
-              onChange={(e) => {
-                setnickName(e.target.value);
-                setnickNameError(false);
-              }}
-            />
+  return (
+    <>
+      <div className="min-h-[calc(100vh-10rem)] flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <div className="mb-8 text-center">
+            <h1 className="text-3xl font-bold">Iniciar sesión</h1>
+            <p className="mt-2">Ingresa tus credenciales para continuar.</p>
           </div>
-          <div>
-            <label htmlFor="password" className="block mb-2">
-              Contraseña
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder={passwordError ? "Debe ingresar una contraseña" : "********"}
-              className={`w-full rounded-md p-2 border transition border-2
-              ${passwordError ?
-                  "border-red-300 focus:ring-1 focus:ring-red-300 outline-none" :
-                  "border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"}`}
-              value={password}
-              onChange={(event) => {
-                setPassword(event.target.value);
-                setPasswordError(false);
-              }}
-            />
-          </div>
-          <button
-            type="submit"
-            className="
+
+          {error && (
+            <div className="bg-red-50 border border-red-300 text-red-700 text-sm rounded-md px-4 py-3 mb-4">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="nickName" className="block mb-2">
+                Nombre de usuario
+              </label>
+              <input
+                id="nickName"
+                type="text"
+                placeholder={
+                  nickNameError
+                    ? "Debe ingresar un nombre de usuario válido"
+                    : "nombre de usuario"
+                }
+                className={`w-full rounded-md p-2 transition border-2
+              ${
+                nickNameError
+                  ? "border-red-300 focus:ring-1 focus:ring-red-300 outline-none"
+                  : "border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+              }`}
+                value={nickName}
+                onChange={(e) => {
+                  setnickName(e.target.value);
+                  setnickNameError(false);
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block mb-2">
+                Contraseña
+              </label>
+              <input
+                id="password"
+                type="password"
+                placeholder={
+                  passwordError ? "Debe ingresar una contraseña" : "********"
+                }
+                className={`w-full rounded-md p-2 transition border-2
+              ${
+                passwordError
+                  ? "border-red-300 focus:ring-1 focus:ring-red-300 outline-none"
+                  : "border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+              }`}
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setPasswordError(false);
+                }}
+              />
+            </div>
+            <button
+              type="submit"
+              className="
             w-full
             mt-2
             py-3
@@ -112,20 +121,17 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             transition
             hover:bg-gray-700
             active:bg-bg-gray-300
-            active:scale-95"
-          >
-            Iniciar sesion
-          </button>
+            active:scale-95 cursor-pointer"
+            >
+              Iniciar sesion
+            </button>
+          </form>
+          <div className="mt-4 text-center">
+            <p>¿No tienes una cuenta?</p>
 
-        </form>
-        <div className="mt-4 text-center">
-          <p>
-            ¿No tienes una cuenta?
-          </p>
-
-          <button
-            type="submit"
-            className="
+            <button
+              type="button"
+              className="
             w-full
             mt-3
             py-3
@@ -133,15 +139,14 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             font-semibold
             active:bg-emerald-800
             active:scale-95
-            bg-emerald-700 text-white hover:bg-emerald-800 transition"
-            onClick={() => navigate("/registrar")}
-          >
-            Registrarse
-          </button>
+            bg-emerald-700 text-white hover:bg-emerald-800 transition cursor-pointer"
+              onClick={() => navigate("/registrar")}
+            >
+              Registrarse
+            </button>
+          </div>
         </div>
-
       </div>
-    </div>
-  </>;
+    </>
+  );
 }
-

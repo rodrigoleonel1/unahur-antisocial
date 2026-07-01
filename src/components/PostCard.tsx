@@ -7,7 +7,7 @@ import TagBoton from "./TagBoton";
 interface PostCardProps {
   post: Post;
   cantidadComentarios?: number;
-  conComentarios?: Boolean;
+  conComentarios?: boolean;
 }
 
 export default function PostCard({
@@ -28,7 +28,10 @@ export default function PostCard({
       >
         <div className="flex flex-col gap-3 flex-1 min-w-0">
           <div className="flex items-center w-full justify-between gap-2">
-            <Link to={`/perfil/${post.user.nickName}`} className="font-semibold truncate text-blue-500 uppercase hover:text-blue-300 transition">
+            <Link
+              to={`/perfil/${post.user.nickName}`}
+              className="font-semibold truncate text-blue-500 uppercase hover:text-blue-300 transition font-display"
+            >
               @{post.user.nickName}
             </Link>
             {destacado && (
@@ -76,14 +79,11 @@ export default function PostCard({
                   className="flex items-center gap-1 text-zinc-600 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors"
                 >
                   <MessageCircle size={16} />
-                  {cantidadComentarios > 0 && (
-                    <span className="text-sm">
-                      {cantidadComentarios}
-                      {cantidadComentarios === 1
-                        ? " comentario"
-                        : " comentarios"}
-                    </span>
-                  )}
+                  <span className="text-sm">
+                    {cantidadComentarios === 0
+                      ? "Sin comentarios"
+                      : `${cantidadComentarios} ${cantidadComentarios === 1 ? "comentario" : "comentarios"}`}
+                  </span>
                 </Link>
 
                 <Link

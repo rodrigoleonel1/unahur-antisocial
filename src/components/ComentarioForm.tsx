@@ -14,20 +14,20 @@ export default function ComentarioForm({
   postId,
   onNuevoComentario,
 }: ComentarioFormProps) {
-  const { usuario } = useAuth();
+  const { user } = useAuth();
   const [texto, setTexto] = useState("");
   const [loading, setLoading] = useState(false);
   const { mostrarAlerta } = useAlert();
 
-  async function handleSubmit(e: React.SubmitEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!texto.trim() || !usuario) return;
+    if (!texto.trim() || !user) return;
 
     try {
       setLoading(true);
       const nuevoComentario = await crearComentario({
         text: texto,
-        user: usuario.id,
+        user: user._id,
         post: postId,
       });
       setTexto("");

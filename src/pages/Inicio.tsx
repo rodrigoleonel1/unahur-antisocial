@@ -4,12 +4,11 @@ import type { Tag } from "../types/Tag";
 import { obtenerComentariosPorPost } from "../services/ComentarioService";
 import { obtenerPosts } from "../services/PostService";
 import { obtenerTags } from "../services/TagService";
-import Error from "../components/Error";
+import ComponenteError from "../components/ComponenteError";
 import Loader from "../components/Loader";
 import PostCard from "../components/PostCard";
 import TagBoton from "../components/TagBoton";
 import ComponenteAnimado from "../components/ComponenteAnimado";
-import { Link } from "react-router-dom";
 
 const POSTS_POR_PAGINA = 4;
 
@@ -62,7 +61,7 @@ export default function Inicio() {
 
   if (loading) return <Loader />;
 
-  if (error) return <Error mensaje={error} />;
+  if (error) return <ComponenteError mensaje={error} />;
 
   return (
     <section className="max-w-2xl mx-auto p-4 space-y-4">
@@ -97,12 +96,10 @@ export default function Inicio() {
       ) : (
         postsPaginados.map((post) => (
           <ComponenteAnimado key={post._id}>
-            <Link to={`/publicacion/${post._id}`}>
-              <PostCard
-                post={post}
-                cantidadComentarios={cantidadComentarios[post._id] ?? 0}
-              />
-            </Link>
+            <PostCard
+              post={post}
+              cantidadComentarios={cantidadComentarios[post._id] ?? 0}
+            />
           </ComponenteAnimado>
         ))
       )}

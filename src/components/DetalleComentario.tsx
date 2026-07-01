@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Comentario } from "../types/Comentario";
 import { tiempoRelativo } from "../utils/tiempoRelativo";
 
@@ -12,9 +13,12 @@ export default function DetalleComentario({
       className="rounded-lg border p-4 border-zinc-300 dark:border-gray-800/60 bg-zinc-200 dark:bg-gray-900 space-y-1"
     >
       <div className="flex items-center justify-between">
-        <h4 className="text-blue-500 font-semibold text-sm uppercase">
+        <Link
+          to={`/perfil/${comentario.user.nickName}`}
+          className="font-semibold truncate text-blue-500 uppercase hover:text-blue-300 transition font-display"
+        >
           @{comentario.user.nickName}
-        </h4>
+        </Link>
         <span className="text-xs">
           {tiempoRelativo(comentario.fechaPublicacion)}
         </span>

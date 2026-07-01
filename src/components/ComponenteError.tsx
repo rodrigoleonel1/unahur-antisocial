@@ -1,4 +1,4 @@
-export default function Error({
+export default function ComponenteError({
   mensaje = "Algo salió mal, intenta de nuevo más tarde",
 }: {
   mensaje?: string;

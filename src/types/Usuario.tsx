@@ -1,6 +1,6 @@
 export type Usuario = {
   _id: string;
-  password:string;
+  password: string;
   nickName: string;
   followers: string[];
   following: string[];

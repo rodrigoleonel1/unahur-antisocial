@@ -8,7 +8,7 @@ import DetallePost from "./pages/DetallePost";
 import RegistroUsuario from "./pages/RegistroUsuario";
 import InicioSesion from "./pages/InicioSesion";
 import RutaProtegida from "./components/RutaProtegida";
-import {AuthProvider} from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import { AlertProvider } from "./context/AlertContext";
@@ -19,7 +19,7 @@ function App() {
       <AlertProvider>
         <AuthProvider>
           <BrowserRouter>
-            <main className="md:ml-20 mb-16 min-h-screen">
+            <main className="md:ml-20 min-h-screen pb-14 md:pb-0">
               <Header />
               <Navbar />
               <Routes>
@@ -28,7 +28,7 @@ function App() {
                 <Route path="/registrar" element={<RegistroUsuario />} />
                 <Route path="/publicacion/:id" element={<DetallePost />} />
 
-                {/* Estas 2 tienen que ser protegidas */}
+                {/* Rutas protegidas */}
                 <Route element={<RutaProtegida />}>
                   <Route path="/perfil/:nickName" element={<Perfil />} />
                   <Route path="/publicar" element={<CrearPost />} />

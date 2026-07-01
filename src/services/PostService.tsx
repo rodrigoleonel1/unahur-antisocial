@@ -18,6 +18,10 @@ export async function obtenerPosts(): Promise<Post[]> {
 export async function obtenerPostPorId(id: string): Promise<Post> {
   const respuesta = await fetch(`${API_URL}/${id}`);
 
+  if (respuesta.status === 400) {
+    throw new Error("NO-EXISTE");
+  }
+
   if (!respuesta.ok) {
     throw new Error("No se pudo obtener el post");
   }
@@ -28,5 +32,42 @@ export async function obtenerPostPorId(id: string): Promise<Post> {
 export async function obtenerPostsDeUsuario(nickName: string): Promise<Post[]> {
   const posts = await obtenerPosts();
 
-  return posts.filter(post => post.user.nickName === nickName);
+  return posts.filter((post) => post.user.nickName === nickName);
+}
+
+export async function crearPost(postData: {
+  description: string;
+  user: string;
+  tags: string[];
+}): Promise<Post> {
+  const respuesta = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(postData),
+  });
+
+  if (!respuesta.ok) {
+    const detalle = await respuesta.json().catch(() => null);
+    console.error("Error del backend:", detalle);
+    throw new Error("No se pudo crear la publicación");
+  }
+
+  return await respuesta.json();
+}
+
+export async function asociarImagenAPost(
+  id: string,
+  urls: string[],
+): Promise<Post> {
+  const respuesta = await fetch(`${API_URL}/${id}/imagenes`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ urls }),
+  });
+
+  if (!respuesta.ok) {
+    throw new Error("No se pudieron asociar las imágenes al posteo.");
+  }
+
+  return await respuesta.json();
 }
