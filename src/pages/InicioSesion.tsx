@@ -134,6 +134,7 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             active:bg-emerald-800
             active:scale-95
             bg-emerald-700 text-white hover:bg-emerald-800 transition"
+            onClick={() => navigate("/registrar")}
           >
             Registrarse
           </button>

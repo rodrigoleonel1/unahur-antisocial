@@ -25,7 +25,7 @@ async function iniciar(data: LoginData): Promise<boolean> {
 
     if (
       data.nickName === usuario.nickName &&
-      data.password === usuario._id
+      data.password === usuario.password
     ) {
       setUser(usuario);
       localStorage.setItem("usuario", JSON.stringify(usuario));
