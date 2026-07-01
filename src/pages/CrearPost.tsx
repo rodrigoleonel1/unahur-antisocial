@@ -61,7 +61,7 @@ export default function CrearPost() {
     );
   };
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: {preventDefault: () => void}) => {
     event.preventDefault();
 
     if (description.trim() === "") {
@@ -69,7 +69,7 @@ export default function CrearPost() {
       return;
     }
 
-    if (!user || !user._id) {
+    if (!user || !user.id) {
       setError("Debes iniciar sesión para publicar");
       return;
     }
@@ -80,7 +80,8 @@ export default function CrearPost() {
 
       const datosParaElBackend = {
         description: description.trim(),
-        user: user._id, 
+        user: user.id, 
+        tags: tagsSeleccionados
       };
 
       const nuevoPost = await crearPost(datosParaElBackend as any);
@@ -90,7 +91,7 @@ export default function CrearPost() {
 
       if (imagenesValidas.length > 0 && nuevoPost._id) {
         await asociarImagenAPost(nuevoPost._id, imagenesValidas);
-      }
+      } 
 
       mostrarAlerta("Publicación creada con éxito", "exito");
       setDescription("");
@@ -98,8 +99,8 @@ export default function CrearPost() {
       setTagsSeleccionados([]);
       navigate("/"); 
 
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al crear la publicación");
+    } catch (err: any) {
+      setError(err?.message || "Error al crear la publicación");
     } finally {
       setEnviando(false);
     }
