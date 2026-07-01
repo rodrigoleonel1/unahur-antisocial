@@ -1,6 +1,6 @@
 import type { Usuario } from "../types/Usuario";
 
-export default function UsuarioPerfil({nickName,esMiPerfil, }: { nickName: Usuario; esMiPerfil: boolean;}) {
+export default function UsuarioPerfil({nickName,esMiPerfil, yaLoSigo, toggleFollow }: { nickName: Usuario; esMiPerfil: boolean; yaLoSigo: boolean; toggleFollow: () => void;}) {
 return (
   <div>
         {/* HEADER PERFIL */}
@@ -30,9 +30,22 @@ return (
 
         {/* BOTÓN FOLLOW / Editar perfil */}
         <div className="mt-5">
-          <button className="w-full bg-emerald-700 text-white py-2 rounded-full font-semibold hover:bg-emerald-800 transition">
-            {esMiPerfil ? "Editar perfil" : "Seguir"}
-          </button>
+          {esMiPerfil ? (
+            <button className="w-full bg-emerald-700 text-white py-2 rounded-full font-semibold hover:bg-emerald-800 transition">
+              Editar perfil
+            </button>
+          ) : (
+            <button
+              onClick={toggleFollow}
+              className={`w-full py-2 rounded-full font-semibold transition ${
+                yaLoSigo
+                  ? "bg-gray-700 hover:bg-gray-800 text-white"
+                  : "bg-emerald-700 hover:bg-emerald-800 text-white"
+              }`}
+            >
+              {yaLoSigo ? "Dejar de seguir" : "Seguir"}
+            </button>
+          )}
         </div>
 
         {/* SEPARADOR */}

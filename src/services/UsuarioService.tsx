@@ -43,3 +43,44 @@ export async function crearUsuario(nickName: string, password: string, email: st
 
   return await respuesta.json()
 }
+
+export async function seguirUsuario( nickFollower: string, nickFollowed: string): Promise<void> {
+  const respuesta = await fetch(`${API_URL}/${nickFollower}/seguir`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      "nickName": `${nickFollowed}`,
+    }),
+  });
+
+  // if (!respuesta.ok) {
+  //   throw new Error("No se pudo seguir al usuario");
+  // }
+    if (!respuesta.ok) {
+    const error = await respuesta.json();
+    console.log(error);
+    throw new Error(error.message);
+  }
+
+}
+
+export async function dejarDeSeguirUsuario(nickFollower: string, nickFollowed: string): Promise<void> {
+  const respuesta = await fetch(
+    `${API_URL}/${nickFollower}/dejar-de-seguir`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "nickName": `${nickFollowed}`,
+      }),
+    }
+  );
+
+  if (!respuesta.ok) {
+    throw new Error("No se pudo dejar de seguir al usuario");
+  }
+}

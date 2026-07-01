@@ -1,52 +1,71 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import type { Usuario } from "../types/Usuario";
 import type { Post } from "../types/Post";
 
-import { obtenerUsuarioPorNickName } from "../services/UsuarioService";
+import { obtenerUsuarioPorNickName, seguirUsuario, dejarDeSeguirUsuario } from "../services/UsuarioService";
 import { obtenerPostsDeUsuario } from "../services/PostService";
+import { obtenerComentariosPorPost } from "../services/ComentarioService";
 
 import UsuarioPerfil from "../components/UsuarioPerfil";
 import PostCard from "../components/PostCard";
 import ComponenteAnimado from "../components/ComponenteAnimado";
-import { obtenerComentariosPorPost } from "../services/ComentarioService";
 import { useAuth } from "../context/AuthContext";
 
 
 export default function Perfil() {
   const { nickName } = useParams<{ nickName: string }>();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, refrescarUsuario } = useAuth();
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [cantidadComentarios, setCantidadComentarios] = useState<Record<string, number>>({});
   const esMiPerfil = isAuthenticated && user?.nickName === usuario?.nickName;
-
-  useEffect(() => {
+  const cargarUsuario = async () => {
     if (!nickName) return;
 
-    async function cargar() {
-      const user = await obtenerUsuarioPorNickName(nickName);
-      setUsuario(user);
-      const posts = await obtenerPostsDeUsuario(nickName);
-      setPosts(posts);
-      const contadorComentarios: Record<string, number> = {};
-      for (const post of posts) {
-        const comentarios = await obtenerComentariosPorPost(post._id);
-        contadorComentarios[post._id] = comentarios.length;
-      }
-      setCantidadComentarios(contadorComentarios);
+    const usuario = await obtenerUsuarioPorNickName(nickName);
+    setUsuario(usuario);
+
+    const posts = await obtenerPostsDeUsuario(nickName);
+    setPosts(posts);
+
+    const contadorComentarios: Record<string, number> = {};
+    
+
+    for (const post of posts) {
+      const comentarios = await obtenerComentariosPorPost(post._id);
+      contadorComentarios[post._id] = comentarios.length;
     }
 
-    cargar();
+    setCantidadComentarios(contadorComentarios);
+  };
+  
+  const toggleFollow = async () => {
+    if (!user || !usuario) return;
+
+    if (yaLoSigo) {
+      await dejarDeSeguirUsuario(user.nickName, usuario.nickName);
+    } else {
+      await seguirUsuario(user.nickName, usuario.nickName);
+    }
+
+    await refrescarUsuario();
+    await cargarUsuario();
+  };
+    
+  useEffect(() => {
+    cargarUsuario();
   }, [nickName]);
 
   if (!usuario) return <p>Cargando...</p>;
 
+  const yaLoSigo = usuario?.followers.includes(user?._id ?? "") ?? false;
+
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white flex justify-center">
       <div className="w-full max-w-xl px-4 py-6">
-        <UsuarioPerfil nickName={usuario} esMiPerfil={esMiPerfil} />
+        <UsuarioPerfil nickName={usuario} esMiPerfil={esMiPerfil} yaLoSigo={yaLoSigo} toggleFollow={toggleFollow} />
         
         {posts 
         ? posts.map((post) => (

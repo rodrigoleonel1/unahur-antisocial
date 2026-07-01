@@ -2,8 +2,8 @@ export type Usuario = {
   _id: string;
   password:string;
   nickName: string;
-  followers: Usuario[];
-  following: Usuario[];
+  followers: string[];
+  following: string[];
 };
 
 export type LoginData = {
@@ -16,4 +16,5 @@ export type AuthContextType = {
   isAuthenticated: boolean;
   iniciar: (data: LoginData) => Promise<boolean>;
   salir: () => void;
+  refrescarUsuario: () => Promise<void>;
 };

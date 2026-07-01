@@ -44,11 +44,21 @@ async function iniciar(data: LoginData): Promise<boolean> {
     localStorage.removeItem("usuario");
   }
 
+  async function refrescarUsuario() {
+    if (!user) return;
+
+    const actualizado = await obtenerUsuarioPorNickName(user.nickName);
+
+    setUser(actualizado);
+    localStorage.setItem("usuario", JSON.stringify(actualizado));
+  }
+
   const value: AuthContextType = {
     user,
     isAuthenticated: user !== null,
     iniciar,
     salir,
+    refrescarUsuario,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
